@@ -9,7 +9,7 @@ from .components import Passenger, Depot
 from .. import utils
 
 class TaxiEnv(GridworldEnv):
-    INTERACT = 4
+    INTERACT = 5
 
     dimensions_onehot = {
         'wall_width': 1,
@@ -110,7 +110,7 @@ class TaxiEnv(GridworldEnv):
         self._initialize_passengers()
         self._initialize_goal()
 
-        self.action_space = spaces.Discrete(5)
+        self.action_space = spaces.Discrete(len(self._action_ids)+1)
 
     # ------------------------------------------------------------
     # Initialization
@@ -281,8 +281,8 @@ class TaxiEnv(GridworldEnv):
                     self.passenger = None
 
     def can_run(self, action):
-        assert action in range(5)
-        if action < 4:
+        assert action in range(len(self._action_ids)+1)
+        if action < len(self._action_ids):
             # movement
             offset = self._action_offsets[action]
             if self.grid.has_wall(self.agent.position, offset):

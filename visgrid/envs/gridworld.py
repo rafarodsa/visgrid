@@ -13,12 +13,14 @@ from .. import utils
 
 class GridworldEnv(gym.Env):
     # Offsets:
-    LEFT = 0
-    RIGHT = 1
-    UP = 2
-    DOWN = 3
+    NOOP = 0
+    LEFT = 1
+    RIGHT = 2
+    UP = 3
+    DOWN = 4
 
     _action_ids = {
+        (0, 0): NOOP,
         (0, -1): LEFT,
         (0, 1): RIGHT,
         (-1, 0): UP,
@@ -122,7 +124,7 @@ class GridworldEnv(gym.Env):
         self._initialize_agent(agent_position)
         self._initialize_depots(goal_position)
 
-        self.action_space = spaces.Discrete(4)
+        self.action_space = spaces.Discrete(len(self._action_ids))
         self._initialize_missing_size_info()
         self._initialize_state_space()
         self._initialize_obs_space()
@@ -270,7 +272,7 @@ class GridworldEnv(gym.Env):
         self.agent.position += offset
 
     def can_run(self, action):
-        assert (action in range(4))
+        assert (action in range(len(self._action_ids)))
         direction = self._action_offsets[action]
         return False if self.grid.has_wall(self.agent.position, direction) else True
 
